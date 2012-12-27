@@ -80,7 +80,7 @@ def slo(environ, start_response, user):
         query = parse_qs(environ["QUERY_STRING"])
         logger.info("query: %s" % query)
         try:
-            (sids, code, head, message) = client.saml_client.logout_response(
+            res = client.saml_client.logout_request_response(
                                                 query["SAMLResponse"][0],
                                                 binding=BINDING_HTTP_REDIRECT)
             logger.info("LOGOUT reponse parsed OK")

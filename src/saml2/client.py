@@ -181,7 +181,7 @@ class Saml2Client(Base):
                                                 ca_certs=self.config.ca_certs)
                     if response:
                         logger.info("Verifying response")
-                        response = self.logout_response(response)
+                        response = self.logout_request_response(response)
 
                     if response:
                         not_done.remove(entity_id)
