@@ -153,9 +153,11 @@ class Saml2Client(Base):
                 destination = destinations[0]
 
                 logger.info("destination to provider: %s" % destination)
-                request = self.create_logout_request(subject_id,
-                                                         destination, entity_id,
-                                                         reason, expire)
+                request = self.create_logout_request(destination,
+                                                     entity_id,
+                                                     subject_id=subject_id,
+                                                     reason=reason,
+                                                     expire=expire)
                 
                 to_sign = []
                 #if sign and binding != BINDING_HTTP_REDIRECT:
