@@ -4,6 +4,8 @@ import logging
 import re
 from cgi import parse_qs
 from saml2 import BINDING_HTTP_REDIRECT
+from saml2 import time_util
+from Cookie import SimpleCookie
 
 logger = logging.getLogger("")
 
@@ -89,9 +91,32 @@ def slo(environ, start_response, user):
             pass
     
     if not sids:
-        start_response("302 Found", [("Location", "/done")])
+        headers = [("Location", "/done")]
+        delco = delete_cookie(environ, "pysaml2")
+        if delco:
+            headers.append(delco)
+        start_response("302 Found", headers)
         return ["Successfull Logout"]
+
+def delete_cookie(environ, name):
+    kaka = environ.get("HTTP_COOKIE", '')
+    if kaka:
+        cookie_obj = SimpleCookie(kaka)
+        morsel = cookie_obj.get(name, None)
+        cookie = SimpleCookie()
+        cookie[name] = morsel
+        cookie[name]["expires"] = \
+            _expiration("now", "%a, %d-%b-%Y %H:%M:%S CET")
+        return tuple(cookie.output().split(": ", 1))
+    return None
     
+def _expiration(timeout, format=None):
+    if timeout == "now":
+        return time_util.instant(format)
+    else:
+        # validity time should match lifetime of assertions
+        return time_util.in_a_while(minutes=timeout, format=format)
+
 #noinspection PyUnusedLocal
 def logout(environ, start_response, user):
     client = environ['repoze.who.plugins']["saml2auth"]
