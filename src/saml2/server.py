@@ -278,6 +278,11 @@ class Server(object):
         except AttributeError:
             self.ident = None
     
+    def close_shelve_db(self):
+        """Close the shelve db to prevent file system locking issues"""
+        if self.ident:
+            self.ident.map.close()
+
     def issuer(self, entityid=None):
         """ Return an Issuer precursor """
         if entityid:

@@ -275,7 +275,6 @@ class TestServer1():
         assert not resp.assertion 
 
     def test_authn_response_0(self):
-        self.server = Server("idp_conf")
 
         conf = config.SPConfig()
         conf.load_file("server_conf")
@@ -384,10 +383,14 @@ class TestServer1():
         _ = s_utils.deflate_and_base64_encode("%s" % (logout_request,))
 
         saml_soap = make_soap_enveloped_saml_thingy(logout_request)
+        self.server.close_shelve_db()
         idp = Server("idp_soap_conf")
         request = idp.parse_logout_request(saml_soap)
         assert request
+        idp.close_shelve_db()
 
+    def teardown_class(self):
+        self.server.close_shelve_db()
 #------------------------------------------------------------------------
 
 IDENTITY = {"eduPersonAffiliation": ["staff", "member"],
@@ -420,6 +423,9 @@ class TestServer2():
         assert subject.subject_confirmation
         subject_confirmation = subject.subject_confirmation
         assert subject_confirmation.subject_confirmation_data.in_response_to == "aaa"
+
+    def teardown_class(self):
+        self.server.close_shelve_db()
 
 def _logout_request(conf_file):
     conf = config.SPConfig()

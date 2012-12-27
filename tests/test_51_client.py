@@ -548,6 +548,7 @@ class TestClient:
                                                returnIDParam="idpID")
 
         assert entity_id == "http://example.org/saml2/idp/sso"
+        self.server.close_shelve_db()
 
     def test_unsolicited_response(self):
         """
@@ -598,3 +599,4 @@ class TestClient:
 
         # One person in the cache
         assert len(self.client.users.subjects()) ==  1
+        self.server.close_shelve_db()
