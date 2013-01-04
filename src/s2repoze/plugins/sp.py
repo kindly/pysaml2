@@ -403,6 +403,9 @@ class SAML2Plugin(FormPluginBase):
                 # Not for me, put the post back where next in line can
                 # find it
                 environ["post.fieldstorage"] = post
+                # restore wsgi.input incase that is needed
+                from StringIO import StringIO
+                environ['wsgi.input'] = StringIO(environ['s2repoze.body'])
                 return {}
             else:
                 logger.info("[sp.identify] --- SAMLResponse ---")
