@@ -258,7 +258,7 @@ class AuthnResponse(StatusResponse):
         self.assertion = None
         self.session_not_on_or_after = 0
         self.asynchop = asynchop
-        self.allow_unsolicited = allow_unsolicited
+        self.allow_unsolicited = True #allow_unsolicited
         self.test = test
 
     def loads(self, xmldata, decode=True, origxml=None):
