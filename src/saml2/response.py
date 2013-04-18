@@ -64,6 +64,8 @@ def for_me(condition, myself ):
 
 def authn_response(conf, return_addr, outstanding_queries=None, timeslack=0,
                    asynchop=True, allow_unsolicited=False):
+    # Horrible hack
+    allow_unsolicited = True
     sec = security_context(conf)
     if not timeslack:
         try:

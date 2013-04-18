@@ -375,6 +375,22 @@ __DEBUG = 0
 LOG_LINE = 60*"="+"\n%s\n"+60*"-"+"\n%s"+60*"="
 LOG_LINE_2 = 60*"="+"\n%s\n%s\n"+60*"-"+"\n%s"+60*"="
 
+
+def fix_pem_file(filename):
+    out = []
+    f = open(filename, 'r')
+    for line in ''.join(f.readlines()).split('\n'):
+        while len(line) > 64:
+            out.append(line[:64])
+            line = line[64:]
+        out.append(line)
+    f.close()
+    f = open(filename, 'w')
+    f.write('\n'.join(out))
+    f.close()
+
+
+
 def verify_signature(enctext, xmlsec_binary, cert_file=None, cert_type="pem",
                         node_name=NODE_NAME, debug=False, node_id=None,
                         id_attr=""):
@@ -420,6 +436,7 @@ def verify_signature(enctext, xmlsec_binary, cert_file=None, cert_type="pem",
         print "%s: %s" % (cert_file, os.access(cert_file, os.F_OK))
         print "%s: %s" % (fil, os.access(fil, os.F_OK))
 
+    fix_pem_file(cert_file)
     pof = Popen(com_list, stderr=PIPE, stdout=PIPE)
     p_out = pof.stdout.read()
     try:
