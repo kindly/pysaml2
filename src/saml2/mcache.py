@@ -34,7 +34,7 @@ class Cache(object):
             if not self._cache.set("subjects", subjects):
                 raise CacheError("Set operation failed")
         
-    def get_identity(self, subject_id, entities=None):
+    def get_identity(self, subject_id, entities=None, check_not_on_or_after=True):
         """ Get all the identity information that has been received and 
         are still valid about the subject.
         

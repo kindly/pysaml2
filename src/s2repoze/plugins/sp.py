@@ -45,6 +45,7 @@ from saml2.discovery import discovery_service_request_url
 from saml2.s_utils import sid
 from saml2.config import config_factory
 from saml2.profile import paos
+import saml2.mcache as mcache
 
 #from saml2.population import Population
 #from saml2.attribute_resolver import AttributeResolver
@@ -526,6 +527,9 @@ def make_plugin(rememberer_name=None, # plugin for remember
     if rememberer_name is None:
         raise ValueError(
              'must include rememberer_name in configuration')
+    if identity_cache == "memcached":
+        identity_cache = mcache.Cache(['127.0.0.1:11211'], debug=0)
+
 
     conf = config_factory("sp", saml_conf)
 
